@@ -4,13 +4,17 @@ const { Book, validate } = require("../models/book");
 
 //GET
 router.get("/", async (req, res) => {
-  const book = await Book.find();
+  const book = await Book.find()
+    .populate("author", "name -_id")
+    .populate("category", "name -_id");
   res.send(book);
 });
 
 //GET by ID
 router.get("/:id", async (req, res) => {
-  const book = await Book.findById(req.params.id);
+  const book = await Book.findById(req.params.id)
+    .populate("author", "name -_id")
+    .populate("category", "name -_id");
   if (!book)
     return res.status(404).send("No book with the given ID was not found.");
   res.send(book);
@@ -40,7 +44,7 @@ router.put("/:id", async (req, res) => {
   book.set({
     name: req.body.name,
     author: req.body.author,
-    numberInStock: req.body.author,
+    numberInStock: req.body.numberInStock,
     rentalRate: req.body.rentalRate,
     category: req.body.category,
   });
