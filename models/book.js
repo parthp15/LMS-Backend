@@ -1,6 +1,7 @@
 const Joi = require("joi");
 const mongoose = require("mongoose");
 const { Author } = require("./author");
+const { Category } = require("./category");
 
 const bookSchema = new mongoose.Schema({
   name: { type: String, required: true, min: 3 },
@@ -13,6 +14,7 @@ const bookSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  category: { type: mongoose.Schema.Types.ObjectId, ref: Category },
 });
 const Book = mongoose.model("Book", bookSchema);
 function validateBook(book) {
@@ -21,6 +23,7 @@ function validateBook(book) {
     author: Joi.string().trim().required(),
     numberInStock: Joi.number().required(),
     rentalRate: Joi.number().required(),
+    category: Joi.string().required(),
   };
   return Joi.validate(book, schema);
 }
